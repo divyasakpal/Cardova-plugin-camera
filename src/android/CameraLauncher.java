@@ -772,7 +772,13 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 // to pass arcane codes back.
                 destType = requestCode - CROP_CAMERA;
                 try {
-                    processResultFromCamera(destType, intent);
+                       //camera crash issue
+                     cordova.getThreadPool().execute(new Runnable() {
+                      public void run() {
+                          processResultFromCamera(destType, intent);
+                      }
+                   });
+                            
                 } catch (IOException e) {
                     e.printStackTrace();
                     LOG.e(LOG_TAG, "Unable to write to file");
@@ -799,7 +805,12 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                                 createCaptureFile(this.encodingType));
                         performCrop(tmpFile, destType, intent);
                     } else {
-                        this.processResultFromCamera(destType, intent);
+                           //camera crash issue
+                            cordova.getThreadPool().execute(new Runnable() {
+                             public void run() {
+                                this.processResultFromCamera(destType, intent);
+                               }
+                         });
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
